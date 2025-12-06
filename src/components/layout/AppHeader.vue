@@ -1,8 +1,27 @@
 <script lang="ts" setup>
+import { ref, onMounted } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
+import { getCategories } from '@/services/products'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
+
+const categories = ref<string[]>([])
+const isLoading = ref(true)
+
+function capitalizeCategory(category: string): string {
+  return category.charAt(0).toUpperCase() + category.slice(1)
+}
+
+onMounted(async () => {
+  try {
+    categories.value = await getCategories()
+  } catch (e) {
+    console.error('Errore nel caricamento delle categorie:', e)
+  } finally {
+    isLoading.value = false
+  }
+})
 </script>
 
 <template>
@@ -12,16 +31,27 @@ const toggleDark = useToggle(isDark)
     </RouterLink>
 
     <nav class="main-nav">
-      <RouterLink to="/" class="nav-link">Home</RouterLink>
-      <RouterLink to="/products" class="nav-link">Prodotti</RouterLink>
-      <RouterLink to="/cart" class="nav-link">Carrello</RouterLink>
-      <RouterLink to="/wishlist" class="nav-link">Wishlist</RouterLink>
+      <RouterLink to="/products" class="nav-link">Tutti i Prodotti</RouterLink>
+      <template v-if="!isLoading">
+        <RouterLink
+          v-for="category in categories"
+          :key="category"
+          :to="{ name: 'products', query: { category } }"
+          class="nav-link"
+        >
+          {{ capitalizeCategory(category) }}
+        </RouterLink>
+      </template>
     </nav>
 
-    <button class="dark-toggle" @click="toggleDark()" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
-      <span v-if="isDark">☀️</span>
-      <span v-else>🌙</span>
-    </button>
+    <div class="header-actions">
+      <RouterLink to="/cart" class="action-link" title="Carrello">🛒</RouterLink>
+      <RouterLink to="/wishlist" class="action-link" title="Wishlist">❤️</RouterLink>
+      <button class="dark-toggle" @click="toggleDark()" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
+        <span v-if="isDark">☀️</span>
+        <span v-else>🌙</span>
+      </button>
+    </div>
   </header>
 </template>
 
@@ -105,6 +135,30 @@ const toggleDark = useToggle(isDark)
 
   @include mobile-only {
     font-size: 0.875rem;
+  }
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.action-link {
+  text-decoration: none;
+  font-size: 1.25rem;
+  padding: 0.5rem;
+  border-radius: 50%;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+
+  @include mobile-only {
+    font-size: 1rem;
+    padding: 0.375rem;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    background-color: var(--hover-bg, rgba(0, 0, 0, 0.05));
   }
 }
 
