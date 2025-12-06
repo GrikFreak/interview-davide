@@ -7,7 +7,17 @@ const toggleDark = useToggle(isDark)
 
 <template>
   <header class="app-header">
-    <h1>Ecommerce App</h1>
+    <RouterLink to="/" class="logo">
+      <h1>Ecommerce App</h1>
+    </RouterLink>
+
+    <nav class="main-nav">
+      <RouterLink to="/" class="nav-link">Home</RouterLink>
+      <RouterLink to="/products" class="nav-link">Prodotti</RouterLink>
+      <RouterLink to="/cart" class="nav-link">Carrello</RouterLink>
+      <RouterLink to="/wishlist" class="nav-link">Wishlist</RouterLink>
+    </nav>
+
     <button class="dark-toggle" @click="toggleDark()" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
       <span v-if="isDark">☀️</span>
       <span v-else>🌙</span>
@@ -29,16 +39,72 @@ const toggleDark = useToggle(isDark)
 
   @include mobile-only {
     padding: 0.75rem 1rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
   }
+}
+
+.logo {
+  text-decoration: none;
 
   h1 {
     margin: 0;
     font-size: 1.5rem;
     color: var(--text-color, #1a1a1a);
+    transition: color 0.2s ease;
 
     @include mobile-only {
       font-size: 1.125rem;
     }
+  }
+
+  &:hover h1 {
+    color: var(--primary-color, #667eea);
+  }
+}
+
+.main-nav {
+  display: flex;
+  gap: 1.5rem;
+
+  @include mobile-only {
+    order: 3;
+    width: 100%;
+    justify-content: center;
+    gap: 1rem;
+  }
+}
+
+.nav-link {
+  text-decoration: none;
+  color: var(--text-color, #1a1a1a);
+  font-weight: 500;
+  padding: 0.5rem 0;
+  position: relative;
+  transition: color 0.2s ease;
+
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--primary-color, #667eea);
+    transition: width 0.2s ease;
+  }
+
+  &:hover,
+  &.router-link-active {
+    color: var(--primary-color, #667eea);
+
+    &::after {
+      width: 100%;
+    }
+  }
+
+  @include mobile-only {
+    font-size: 0.875rem;
   }
 }
 
