@@ -1,16 +1,26 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
+import { useRoute } from 'vue-router'
 import { getCategories } from '@/services/products'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
+const route = useRoute()
 
 const categories = ref<string[]>([])
 const isLoading = ref(true)
 
 function capitalizeCategory(category: string): string {
   return category.charAt(0).toUpperCase() + category.slice(1)
+}
+
+const isNavLinkActive = (category?: string) => {
+  if (route.name !== 'products') return false
+  if (category) {
+    return route.query.category === category
+  }
+  return !route.query.category
 }
 
 onMounted(async () => {
@@ -31,13 +41,20 @@ onMounted(async () => {
     </RouterLink>
 
     <nav class="main-nav">
-      <RouterLink to="/products" class="nav-link">Tutti i Prodotti</RouterLink>
+      <RouterLink 
+        to="/products" 
+        class="nav-link"
+        :class="{ 'nav-link-active': isNavLinkActive() }"
+      >
+        Tutti i Prodotti
+      </RouterLink>
       <template v-if="!isLoading">
         <RouterLink
           v-for="category in categories"
           :key="category"
           :to="{ name: 'products', query: { category } }"
           class="nav-link"
+          :class="{ 'nav-link-active': isNavLinkActive(category) }"
         >
           {{ capitalizeCategory(category) }}
         </RouterLink>
@@ -45,8 +62,22 @@ onMounted(async () => {
     </nav>
 
     <div class="header-actions">
-      <RouterLink to="/cart" class="action-link" title="Carrello">🛒</RouterLink>
-      <RouterLink to="/wishlist" class="action-link" title="Wishlist">❤️</RouterLink>
+      <RouterLink 
+        to="/cart" 
+        class="action-link" 
+        :class="{ 'action-link-active': route.name === 'cart' }"
+        title="Carrello"
+      >
+        🛒
+      </RouterLink>
+      <RouterLink 
+        to="/wishlist" 
+        class="action-link"
+        :class="{ 'action-link-active': route.name === 'wishlist' }"
+        title="Wishlist"
+      >
+        ❤️
+      </RouterLink>
       <button class="dark-toggle" @click="toggleDark()" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
         <span v-if="isDark">☀️</span>
         <span v-else>🌙</span>
@@ -63,8 +94,8 @@ onMounted(async () => {
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
-  background: var(--header-bg, #fff);
-  border-bottom: 1px solid var(--border-color, #e0e0e0);
+  background: var(--header-bg);
+  border-bottom: 1px solid var(--border-color);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 
   @include mobile-only {
@@ -80,7 +111,7 @@ onMounted(async () => {
   h1 {
     margin: 0;
     font-size: 1.5rem;
-    color: var(--text-color, #1a1a1a);
+    color: var(--text-color);
     transition: color 0.2s ease;
 
     @include mobile-only {
@@ -89,7 +120,7 @@ onMounted(async () => {
   }
 
   &:hover h1 {
-    color: var(--primary-color, #667eea);
+    color: var(--primary-color);
   }
 }
 
@@ -107,7 +138,7 @@ onMounted(async () => {
 
 .nav-link {
   text-decoration: none;
-  color: var(--text-color, #1a1a1a);
+  color: var(--text-color);
   font-weight: 500;
   padding: 0.5rem 0;
   position: relative;
@@ -120,13 +151,21 @@ onMounted(async () => {
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--primary-color, #667eea);
+    background: var(--primary-color);
     transition: width 0.2s ease;
   }
 
-  &:hover,
-  &.router-link-active {
-    color: var(--primary-color, #667eea);
+  &:hover {
+    color: var(--primary-color);
+
+    &::after {
+      width: 100%;
+    }
+  }
+
+  &.nav-link-active {
+    color: var(--primary-color);
+    font-weight: 600;
 
     &::after {
       width: 100%;
@@ -158,13 +197,19 @@ onMounted(async () => {
 
   &:hover {
     transform: scale(1.1);
-    background-color: var(--hover-bg, rgba(0, 0, 0, 0.05));
+    background-color: var(--hover-bg);
+  }
+
+  &.action-link-active {
+    background-color: var(--primary-color);
+    color: var(--active-text);
+    transform: scale(1.05);
   }
 }
 
 .dark-toggle {
   background: transparent;
-  border: 2px solid var(--border-color, #e0e0e0);
+  border: 2px solid var(--border-color);
   border-radius: 50%;
   width: 44px;
   height: 44px;
