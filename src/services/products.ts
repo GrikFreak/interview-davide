@@ -6,6 +6,14 @@ export async function getAllProducts(): Promise<Product[]> {
   return apiRequest<Product[]>(ENDPOINTS.PRODUCTS)
 }
 
+export async function getCategories(): Promise<string[]> {
+  return apiRequest<string[]>(ENDPOINTS.CATEGORIES)
+}
+
+export async function getProductsByCategory(category: string): Promise<Product[]> {
+  return apiRequest<Product[]>(`${ENDPOINTS.PRODUCTS}/category/${category}`)
+}
+
 export async function getProduct(id: number): Promise<Product> {
   return apiRequest<Product>(`${ENDPOINTS.PRODUCTS}/${id}`)
 }
