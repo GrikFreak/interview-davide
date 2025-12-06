@@ -16,6 +16,8 @@ const toggleDark = useToggle(isDark)
 </template>
 
 <style scoped lang="scss">
+@use '@/assets/styles/breakpoints' as *;
+
 .app-header {
   display: flex;
   justify-content: space-between;
@@ -25,10 +27,18 @@ const toggleDark = useToggle(isDark)
   border-bottom: 1px solid var(--border-color, #e0e0e0);
   transition: background-color 0.3s ease, border-color 0.3s ease;
 
+  @include mobile-only {
+    padding: 0.75rem 1rem;
+  }
+
   h1 {
     margin: 0;
     font-size: 1.5rem;
     color: var(--text-color, #1a1a1a);
+
+    @include mobile-only {
+      font-size: 1.125rem;
+    }
   }
 }
 
@@ -44,6 +54,12 @@ const toggleDark = useToggle(isDark)
   justify-content: center;
   font-size: 1.25rem;
   transition: transform 0.2s ease, border-color 0.3s ease;
+
+  @include mobile-only {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
 
   &:hover {
     transform: scale(1.1);
