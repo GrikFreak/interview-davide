@@ -15,11 +15,11 @@
   h1 {
     font-size: 2rem;
     margin-bottom: 0.5rem;
-    color: var(--text-color, #1a1a1a);
+    color: var(--text-color);
   }
 
   p {
-    color: var(--text-secondary, #666);
+    color: var(--text-secondary);
   }
 }
 </style>

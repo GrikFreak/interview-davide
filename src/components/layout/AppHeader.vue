@@ -1,12 +1,15 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { getCategories } from '@/services/products'
+import { useAuthStore } from '@/stores/auth'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 const route = useRoute()
+const router = useRouter()
+const authStore = useAuthStore()
 
 const categories = ref<string[]>([])
 const isLoading = ref(true)
@@ -21,6 +24,17 @@ const isNavLinkActive = (category?: string) => {
     return route.query.category === category
   }
   return !route.query.category
+}
+
+function handleUserClick() {
+  if (authStore.isAuthenticated) {
+    authStore.logout()
+    if (route.name === 'cart' || route.name === 'wishlist') {
+      router.push('/')
+    }
+  } else {
+    authStore.openLoginModal()
+  }
 }
 
 onMounted(async () => {
@@ -62,22 +76,32 @@ onMounted(async () => {
     </nav>
 
     <div class="header-actions">
-      <RouterLink 
-        to="/cart" 
-        class="action-link" 
-        :class="{ 'action-link-active': route.name === 'cart' }"
-        title="Carrello"
+      <template v-if="authStore.isAuthenticated">
+        <RouterLink 
+          to="/cart" 
+          class="action-link" 
+          :class="{ 'action-link-active': route.name === 'cart' }"
+          title="Carrello"
+        >
+          🛒
+        </RouterLink>
+        <RouterLink 
+          to="/wishlist" 
+          class="action-link"
+          :class="{ 'action-link-active': route.name === 'wishlist' }"
+          title="Wishlist"
+        >
+          ❤️
+        </RouterLink>
+      </template>
+      <button 
+        class="user-button"
+        :class="{ 'user-button--authenticated': authStore.isAuthenticated }"
+        @click="handleUserClick"
+        :title="authStore.isAuthenticated ? 'Logout' : 'Login'"
       >
-        🛒
-      </RouterLink>
-      <RouterLink 
-        to="/wishlist" 
-        class="action-link"
-        :class="{ 'action-link-active': route.name === 'wishlist' }"
-        title="Wishlist"
-      >
-        ❤️
-      </RouterLink>
+        👤
+      </button>
       <button class="dark-toggle" @click="toggleDark()" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
         <span v-if="isDark">☀️</span>
         <span v-else>🌙</span>
@@ -204,6 +228,41 @@ onMounted(async () => {
     background-color: var(--primary-color);
     color: var(--active-text);
     transform: scale(1.05);
+  }
+}
+
+.user-button {
+  background: transparent;
+  border: 2px solid var(--border-color);
+  border-radius: 50%;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.25rem;
+  transition: transform 0.2s ease, border-color 0.3s ease, background-color 0.2s ease;
+
+  @include mobile-only {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+    border-color: var(--primary-color);
+  }
+
+  &--authenticated {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: var(--active-text);
+  }
+
+  &:active {
+    transform: scale(0.95);
   }
 }
 
