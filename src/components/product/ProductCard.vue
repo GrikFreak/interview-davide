@@ -1,6 +1,9 @@
 <script setup lang="ts">
 import type { Product } from '@/types'
 import Button from '@/components/ui/Button.vue'
+import { useAuthStore } from '@/stores/auth'
+
+const authStore = useAuthStore()
 
 defineProps<{
   product: Product
@@ -21,7 +24,7 @@ defineEmits<{
       <span class="product-card__category">{{ product.category }}</span>
       <h3 class="product-card__title">{{ product.title }}</h3>
       <p class="product-card__price">€{{ product.price.toFixed(2) }}</p>
-      <div class="product-card__actions">
+      <div v-if="authStore.isAuthenticated" class="product-card__actions">
         <Button @click="$emit('addToCart', product)">
           Aggiungi al carrello
         </Button>

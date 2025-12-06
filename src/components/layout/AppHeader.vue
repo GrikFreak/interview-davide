@@ -56,7 +56,7 @@ onMounted(async () => {
 
     <nav class="main-nav">
       <RouterLink 
-        to="/products" 
+        :to="{ name: 'products' }"
         class="nav-link"
         :class="{ 'nav-link-active': isNavLinkActive() }"
       >
