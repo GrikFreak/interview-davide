@@ -55,7 +55,7 @@ onMounted(async () => {
 
 <template>
   <header class="app-header">
-    <RouterLink to="/" class="logo">
+    <RouterLink :to="{ name: 'products' }" class="logo">
       <h1>Ecommerce App</h1>
     </RouterLink>
 

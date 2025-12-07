@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '@/views/HomeView.vue'
 import { useAuthStore } from '@/stores/auth'
 
 const router = createRouter({
@@ -7,8 +6,7 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      redirect: '/products',
     },
     {
       path: '/products',
@@ -40,7 +38,7 @@ router.beforeEach((to, from, next) => {
     const authStore = useAuthStore()
     
     if (!authStore.isAuthenticated) {
-      next({ name: 'home' })
+      next({ name: 'products' })
       return
     }
   }
