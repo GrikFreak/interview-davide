@@ -3,6 +3,8 @@ import { ref, computed } from 'vue'
 import { login as loginApi } from '@/services/auth'
 import type { LoginPayload } from '@/types/auth'
 import { TOKEN_KEY } from '@/consts'
+import { useCartStore } from './cart'
+import { useWishlistStore } from './wishlist'
 
 export const useAuthStore = defineStore('auth', () => {
   const token = ref<string | null>(localStorage.getItem(TOKEN_KEY))
@@ -41,6 +43,13 @@ export const useAuthStore = defineStore('auth', () => {
   function logout() {
     setToken(null)
     error.value = null
+    
+    // Clear cart and wishlist on logout
+    const cartStore = useCartStore()
+    const wishlistStore = useWishlistStore()
+    
+    cartStore.clearCart()
+    wishlistStore.clearWishlist()
   }
 
   function openLoginModal() {
