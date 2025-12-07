@@ -38,13 +38,6 @@ async function fetchProducts() {
   }
 }
 
-function handleAddToCart(product: Product) {
-  console.log('Aggiungi al carrello:', product)
-}
-
-function handleAddToWishlist(product: Product) {
-  console.log('Aggiungi alla wishlist:', product)
-}
 
 watch(currentCategory, fetchProducts, { immediate: true })
 </script>
@@ -75,8 +68,6 @@ watch(currentCategory, fetchProducts, { immediate: true })
     <ProductGrid
       v-else
       :products="products"
-      @add-to-cart="handleAddToCart"
-      @add-to-wishlist="handleAddToWishlist"
     />
   </main>
 </template>

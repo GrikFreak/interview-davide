@@ -1,19 +1,15 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import type { Product } from '@/types'
-import Button from '@/components/ui/Button.vue'
 import { useAuthStore } from '@/stores/auth'
+import AddToCartButton from './AddToCartButton.vue'
+import WishlistButton from './WishlistButton.vue'
 
 const router = useRouter()
 const authStore = useAuthStore()
 
 defineProps<{
   product: Product
-}>()
-
-defineEmits<{
-  addToCart: [product: Product]
-  addToWishlist: [product: Product]
 }>()
 
 function handleCardClick(product: Product) {
@@ -35,12 +31,8 @@ function handleCardClick(product: Product) {
         class="product-card__actions"
         @click.stop
       >
-        <Button @click.stop="$emit('addToCart', product)">
-          Aggiungi al carrello
-        </Button>
-        <Button variant="secondary" icon @click.stop="$emit('addToWishlist', product)" aria-label="Aggiungi alla wishlist">
-          ❤️
-        </Button>
+        <AddToCartButton :product="product" />
+        <WishlistButton :product="product" />
       </div>
     </div>
   </article>

@@ -5,11 +5,6 @@ import ProductCard from './ProductCard.vue'
 defineProps<{
   products: Product[]
 }>()
-
-defineEmits<{
-  addToCart: [product: Product]
-  addToWishlist: [product: Product]
-}>()
 </script>
 
 <template>
@@ -18,8 +13,6 @@ defineEmits<{
       v-for="product in products"
       :key="product.id"
       :product="product"
-      @add-to-cart="$emit('addToCart', $event)"
-      @add-to-wishlist="$emit('addToWishlist', $event)"
     />
   </div>
 </template>
