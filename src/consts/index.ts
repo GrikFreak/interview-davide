@@ -10,3 +10,5 @@ export const ENDPOINTS = {
 }
 
 export const TOKEN_KEY = 'auth_token'
+export const CART_KEY = 'cart_items'
+export const WISHLIST_KEY = 'wishlist_items'
