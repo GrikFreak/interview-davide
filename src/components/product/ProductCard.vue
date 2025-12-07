@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useRouter } from 'vue-router'
 import type { Product } from '@/types'
 import Button from '@/components/ui/Button.vue'
 import { useAuthStore } from '@/stores/auth'
 
+const router = useRouter()
 const authStore = useAuthStore()
 
 defineProps<{
@@ -13,10 +15,14 @@ defineEmits<{
   addToCart: [product: Product]
   addToWishlist: [product: Product]
 }>()
+
+function handleCardClick(product: Product) {
+  router.push({ name: 'product-detail', params: { id: product.id } })
+}
 </script>
 
 <template>
-  <article class="product-card">
+  <article class="product-card" @click="handleCardClick(product)">
     <div class="product-card__image">
       <img :src="product.image" :alt="product.title" loading="lazy" />
     </div>
@@ -24,11 +30,15 @@ defineEmits<{
       <span class="product-card__category">{{ product.category }}</span>
       <h3 class="product-card__title">{{ product.title }}</h3>
       <p class="product-card__price">€{{ product.price.toFixed(2) }}</p>
-      <div v-if="authStore.isAuthenticated" class="product-card__actions">
-        <Button @click="$emit('addToCart', product)">
+      <div 
+        v-if="authStore.isAuthenticated" 
+        class="product-card__actions"
+        @click.stop
+      >
+        <Button @click.stop="$emit('addToCart', product)">
           Aggiungi al carrello
         </Button>
-        <Button variant="secondary" icon @click="$emit('addToWishlist', product)" aria-label="Aggiungi alla wishlist">
+        <Button variant="secondary" icon @click.stop="$emit('addToWishlist', product)" aria-label="Aggiungi alla wishlist">
           ❤️
         </Button>
       </div>
@@ -43,6 +53,7 @@ defineEmits<{
   border-radius: 0.75rem;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-4px);
