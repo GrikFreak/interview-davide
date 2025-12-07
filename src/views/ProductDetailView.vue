@@ -150,6 +150,7 @@ onMounted(async () => {
   padding-top: 2rem;
   border-top: 1px solid var(--border-color);
   flex-wrap: wrap;
+  width: 100%;
 }
 </style>
 

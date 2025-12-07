@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Plus, Minus } from 'lucide-vue-next'
 import Button from '@/components/ui/Button.vue'
 
 interface Props {
@@ -53,7 +54,7 @@ function handleInput(event: Event) {
       :disabled="disabled || quantity <= min"
       aria-label="Diminuisci quantità"
     >
-      −
+      <Minus :size="16" />
     </Button>
     <input
       type="number"
@@ -73,7 +74,7 @@ function handleInput(event: Event) {
       :disabled="disabled || quantity >= max"
       aria-label="Aumenta quantità"
     >
-      +
+      <Plus :size="16" />
     </Button>
   </div>
 </template>

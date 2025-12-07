@@ -37,7 +37,7 @@ function handleQuantityChange(newQuantity: number) {
 </script>
 
 <template>
-  <div class="add-to-cart">
+  <div class="add-to-cart" :class="{ 'add-to-cart--with-quantity': isInCart && showQuantity }">
     <template v-if="isInCart && showQuantity">
       <QuantitySelector
         :quantity="quantity"
@@ -48,12 +48,12 @@ function handleQuantityChange(newQuantity: number) {
       </Button>
     </template>
     <template v-else-if="isInCart">
-      <Button variant="secondary" @click="handleAddToCart">
+      <Button variant="secondary" @click="handleAddToCart" class="add-to-cart__button">
         Rimuovi dal carrello
       </Button>
     </template>
     <template v-else>
-      <Button @click="handleAddToCart">
+      <Button @click="handleAddToCart" class="add-to-cart__button">
         Aggiungi al carrello
       </Button>
     </template>
@@ -66,6 +66,26 @@ function handleQuantityChange(newQuantity: number) {
   gap: 0.75rem;
   align-items: center;
   flex-wrap: wrap;
+  width: 100%;
+
+  &__button {
+    flex: 1;
+    min-width: 0;
+
+    :deep(.btn) {
+      width: 100%;
+    }
+  }
+
+  &--with-quantity {
+    .add-to-cart__button {
+      flex: 0 0 auto;
+
+      :deep(.btn) {
+        width: auto;
+      }
+    }
+  }
 }
 </style>
 

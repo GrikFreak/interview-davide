@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, watch } from 'vue'
+import { X } from 'lucide-vue-next'
 import { useAuthStore } from '@/stores/auth'
 import Button from './Button.vue'
 import Input from './Input.vue'
@@ -50,7 +51,7 @@ function handleClose() {
           <div class="modal-header">
             <h2>Login</h2>
             <button class="close-button" @click="handleClose" :disabled="authStore.isLoading">
-              ✕
+              <X :size="20" />
             </button>
           </div>
 

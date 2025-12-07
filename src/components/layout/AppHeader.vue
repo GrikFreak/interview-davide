@@ -4,12 +4,17 @@ import { useDark, useToggle } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { getCategories } from '@/services/products'
 import { useAuthStore } from '@/stores/auth'
+import { useCartStore } from '@/stores/cart'
+import { useWishlistStore } from '@/stores/wishlist'
+import { ShoppingCart, Heart, User, Sun, Moon } from 'lucide-vue-next'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
 const route = useRoute()
 const router = useRouter()
 const authStore = useAuthStore()
+const cartStore = useCartStore()
+const wishlistStore = useWishlistStore()
 
 const categories = ref<string[]>([])
 const isLoading = ref(true)
@@ -83,7 +88,10 @@ onMounted(async () => {
           :class="{ 'action-link-active': route.name === 'cart' }"
           title="Carrello"
         >
-          🛒
+          <ShoppingCart :size="20" />
+          <span v-if="cartStore.totalItems > 0" class="action-link__badge">
+            {{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}
+          </span>
         </RouterLink>
         <RouterLink 
           to="/wishlist" 
@@ -91,7 +99,10 @@ onMounted(async () => {
           :class="{ 'action-link-active': route.name === 'wishlist' }"
           title="Wishlist"
         >
-          ❤️
+          <Heart :size="20" />
+          <span v-if="wishlistStore.totalItems > 0" class="action-link__badge">
+            {{ wishlistStore.totalItems > 99 ? '99+' : wishlistStore.totalItems }}
+          </span>
         </RouterLink>
       </template>
       <button 
@@ -100,11 +111,11 @@ onMounted(async () => {
         @click="handleUserClick"
         :title="authStore.isAuthenticated ? 'Logout' : 'Login'"
       >
-        👤
+        <User :size="20" />
       </button>
       <button class="dark-toggle" @click="toggleDark()" :aria-label="isDark ? 'Switch to light mode' : 'Switch to dark mode'">
-        <span v-if="isDark">☀️</span>
-        <span v-else>🌙</span>
+        <Sun v-if="isDark" :size="18" />
+        <Moon v-else :size="18" />
       </button>
     </div>
   </header>
@@ -209,56 +220,92 @@ onMounted(async () => {
 
 .action-link {
   text-decoration: none;
-  font-size: 1.25rem;
-  padding: 0.5rem;
-  border-radius: 50%;
-  transition: transform 0.2s ease, background-color 0.2s ease;
+  padding: 0.625rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
 
   @include mobile-only {
-    font-size: 1rem;
-    padding: 0.375rem;
+    padding: 0.5rem;
   }
 
   &:hover {
-    transform: scale(1.1);
     background-color: var(--hover-bg);
+    color: var(--primary-color);
   }
 
   &.action-link-active {
     background-color: var(--primary-color);
     color: var(--active-text);
-    transform: scale(1.05);
+  }
+
+  &__badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background-color: #ef4444;
+    color: white;
+    font-size: 0.625rem;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.25rem;
+    border: 2px solid var(--header-bg);
+    line-height: 1;
+
+    @include mobile-only {
+      font-size: 0.5625rem;
+      min-width: 16px;
+      height: 16px;
+      border-radius: 8px;
+      top: -2px;
+      right: -2px;
+    }
   }
 }
 
 .user-button {
   background: transparent;
-  border: 2px solid var(--border-color);
-  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
   width: 44px;
   height: 44px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  transition: transform 0.2s ease, border-color 0.3s ease, background-color 0.2s ease;
+  color: var(--text-color);
+  transition: all 0.2s ease;
 
   @include mobile-only {
     width: 36px;
     height: 36px;
-    font-size: 1rem;
   }
 
   &:hover {
-    transform: scale(1.1);
+    background-color: var(--hover-bg);
     border-color: var(--primary-color);
+    color: var(--primary-color);
   }
 
   &--authenticated {
     background-color: var(--primary-color);
     border-color: var(--primary-color);
     color: var(--active-text);
+
+    &:hover {
+      background-color: var(--primary-hover);
+      border-color: var(--primary-hover);
+      color: var(--active-text);
+    }
   }
 
   &:active {
@@ -268,25 +315,26 @@ onMounted(async () => {
 
 .dark-toggle {
   background: transparent;
-  border: 2px solid var(--border-color);
-  border-radius: 50%;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
   width: 44px;
   height: 44px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.25rem;
-  transition: transform 0.2s ease, border-color 0.3s ease;
+  color: var(--text-color);
+  transition: all 0.2s ease;
 
   @include mobile-only {
     width: 36px;
     height: 36px;
-    font-size: 1rem;
   }
 
   &:hover {
-    transform: scale(1.1);
+    background-color: var(--hover-bg);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
   }
 
   &:active {

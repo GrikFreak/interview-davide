@@ -19,6 +19,13 @@ function handleCardClick(product: Product) {
 
 <template>
   <article class="product-card" @click="handleCardClick(product)">
+    <div 
+      v-if="authStore.isAuthenticated" 
+      class="product-card__wishlist"
+      @click.stop
+    >
+      <WishlistButton :product="product" />
+    </div>
     <div class="product-card__image">
       <img :src="product.image" :alt="product.title" loading="lazy" />
     </div>
@@ -28,11 +35,9 @@ function handleCardClick(product: Product) {
       <p class="product-card__price">€{{ product.price.toFixed(2) }}</p>
       <div 
         v-if="authStore.isAuthenticated" 
-        class="product-card__actions"
         @click.stop
       >
         <AddToCartButton :product="product" />
-        <WishlistButton :product="product" />
       </div>
     </div>
   </article>
@@ -40,6 +45,7 @@ function handleCardClick(product: Product) {
 
 <style scoped lang="scss">
 .product-card {
+  position: relative;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
@@ -50,6 +56,13 @@ function handleCardClick(product: Product) {
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  }
+
+  &__wishlist {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    z-index: 10;
   }
 
   &__image {
@@ -95,15 +108,6 @@ function handleCardClick(product: Product) {
     font-weight: 700;
     color: var(--text-color);
     margin: 0.5rem 0 1rem;
-  }
-
-  &__actions {
-    display: flex;
-    gap: 0.5rem;
-
-    > :first-child {
-      flex: 1;
-    }
   }
 }
 </style>

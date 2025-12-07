@@ -2,6 +2,7 @@
 import { computed } from 'vue'
 import type { Product } from '@/types/product'
 import { useWishlistStore } from '@/stores/wishlist'
+import { Heart } from 'lucide-vue-next'
 import Button from '@/components/ui/Button.vue'
 
 interface Props {
@@ -27,7 +28,7 @@ function handleToggle() {
     :aria-label="isInWishlist ? 'Rimuovi dalla wishlist' : 'Aggiungi alla wishlist'"
     :class="{ 'wishlist-button--active': isInWishlist }"
   >
-    {{ isInWishlist ? '❤️' : '🤍' }}
+    <Heart :size="18" :fill="isInWishlist ? 'currentColor' : 'none'" />
   </Button>
 </template>
 
