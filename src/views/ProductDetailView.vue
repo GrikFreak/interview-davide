@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { getProduct } from '@/services/products'
 import type { Product } from '@/types/product'
@@ -8,13 +8,17 @@ import EmptyState from '@/components/ui/EmptyState.vue'
 import AddToCartButton from '@/components/product/AddToCartButton.vue'
 import WishlistButton from '@/components/product/WishlistButton.vue'
 import { useAuthStore } from '@/stores/auth'
+import { useWishlistStore } from '@/stores/wishlist'
 
 const route = useRoute()
 const authStore = useAuthStore()
+const wishlistStore = useWishlistStore()
 
 const product = ref<Product | null>(null)
 const isLoading = ref(true)
 const error = ref<string | null>(null)
+
+const isInWishlist = computed(() => wishlistStore.isInWishlist(product.value?.id ?? 0))
 
 onMounted(async () => {
   try {
@@ -57,7 +61,7 @@ onMounted(async () => {
           <AddToCartButton :product="product" :show-quantity="true" />
           <div class="wishlist-wrapper">
             <WishlistButton :product="product" />
-            <span class="wishlist-label">Aggiungi il prodotto alla wishlist</span>
+            <span class="wishlist-label">{{isInWishlist ? 'Rimuovi dalla wishlist' : 'Aggiungi alla wishlist'}}</span>
           </div>
         </div>
       </div>
