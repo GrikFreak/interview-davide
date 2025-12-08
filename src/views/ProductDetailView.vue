@@ -55,7 +55,10 @@ onMounted(async () => {
 
         <div v-if="authStore.isAuthenticated" class="product-detail__actions">
           <AddToCartButton :product="product" :show-quantity="true" />
-          <WishlistButton :product="product" />
+          <div class="wishlist-wrapper">
+            <WishlistButton :product="product" />
+            <span class="wishlist-label">Aggiungi il prodotto alla wishlist</span>
+          </div>
         </div>
       </div>
     </div>
@@ -151,6 +154,17 @@ onMounted(async () => {
   border-top: 1px solid var(--border-color);
   flex-wrap: wrap;
   width: 100%;
+}
+
+.wishlist-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.wishlist-label {
+  font-size: 0.875rem;
+  color: var(--text-color);
 }
 </style>
 

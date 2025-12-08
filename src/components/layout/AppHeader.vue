@@ -186,12 +186,11 @@ onMounted(async () => {
     left: 0;
     width: 0;
     height: 2px;
-    background: var(--primary-color);
+    background: var(--text-color);
     transition: width 0.2s ease;
   }
 
   &:hover {
-    color: var(--primary-color);
 
     &::after {
       width: 100%;
@@ -199,7 +198,6 @@ onMounted(async () => {
   }
 
   &.nav-link-active {
-    color: var(--primary-color);
     font-weight: 600;
 
     &::after {

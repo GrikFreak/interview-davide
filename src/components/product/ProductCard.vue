@@ -35,6 +35,7 @@ function handleCardClick(product: Product) {
       <p class="product-card__price">€{{ product.price.toFixed(2) }}</p>
       <div 
         v-if="authStore.isAuthenticated" 
+        class="product-card__actions"
         @click.stop
       >
         <AddToCartButton :product="product" />
@@ -46,12 +47,16 @@ function handleCardClick(product: Product) {
 <style scoped lang="scss">
 .product-card {
   position: relative;
+  display: flex;
+  flex-direction: column;
   background: var(--card-bg);
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   overflow: hidden;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   cursor: pointer;
+  height: 100%;
+  max-height: 600px;
 
   &:hover {
     transform: translateY(-4px);
@@ -66,22 +71,27 @@ function handleCardClick(product: Product) {
   }
 
   &__image {
-    aspect-ratio: 1;
+    width: auto;
+    height: 300px;
     padding: 1rem;
     background: var(--image-bg);
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-shrink: 0;
 
     img {
-      max-width: 100%;
-      max-height: 100%;
+      width: 100%;
+      height: 100%;
       object-fit: contain;
     }
   }
 
   &__content {
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
   }
 
   &__category {
@@ -108,6 +118,11 @@ function handleCardClick(product: Product) {
     font-weight: 700;
     color: var(--text-color);
     margin: 0.5rem 0 1rem;
+  }
+
+  &__actions {
+    margin-top: auto;
+    padding-top: 0.5rem;
   }
 }
 </style>

@@ -5,25 +5,29 @@
   --header-bg: #ffffff;
   --card-bg: #ffffff;
   --border-color: #e0e0e0;
-  --primary-color: #667eea;
-  --primary-hover: #5a6fd6;
+  --primary-color: #3635fb;
+  --primary-hover: #2e2dd5;
   --image-bg: #f8f8f8;
   --hover-bg: rgba(0, 0, 0, 0.05);
   --active-text: #ffffff;
+  --wishlist-color: #dc2626;
+  --wishlist-hover: #b91c1c;
 }
 
 html.dark {
-  --bg-color: #121212;
+  --bg-color: #000000;
   --text-color: #f5f5f5;
   --text-secondary: #a0a0a0;
   --header-bg: #1e1e1e;
   --card-bg: #1e1e1e;
   --border-color: #333333;
-  --primary-color: #818cf8;
-  --primary-hover: #6366f1;
+  --primary-color: #3635fb;
+  --primary-hover: #2e2dd5;
   --image-bg: #2a2a2a;
   --hover-bg: rgba(255, 255, 255, 0.1);
   --active-text: #ffffff;
+  --wishlist-color: #dc2626;
+  --wishlist-hover: #b91c1c;
 }
 
 * {

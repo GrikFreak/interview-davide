@@ -28,14 +28,23 @@ function handleToggle() {
     :aria-label="isInWishlist ? 'Rimuovi dalla wishlist' : 'Aggiungi alla wishlist'"
     :class="{ 'wishlist-button--active': isInWishlist }"
   >
-    <Heart :size="18" :fill="isInWishlist ? 'currentColor' : 'none'" />
+    <Heart :size="18" :fill="isInWishlist ? 'currentColor' : 'none'" class="heart-icon" />
   </Button>
 </template>
 
 <style scoped lang="scss">
+.btn {
+  border-radius: 50%;
+}
+
 .wishlist-button--active {
-  background-color: var(--primary-color);
-  color: var(--active-text);
+  .heart-icon {
+    color: var(--wishlist-color);
+  }
+
+  &:hover .heart-icon {
+    color: var(--wishlist-hover);
+  }
 }
 </style>
 
