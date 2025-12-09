@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 import type { Product } from '@/types/product'
 import { useCartStore } from '@/stores/cart'
 import Button from '@/components/ui/Button.vue'
@@ -18,12 +18,18 @@ const cartStore = useCartStore()
 
 const isInCart = computed(() => cartStore.isInCart(props.product.id))
 const quantity = computed(() => cartStore.getItemQuantity(props.product.id) || 1)
+const isAnimating = ref(false)
 
 function handleAddToCart() {
   if (isInCart.value) {
     cartStore.removeFromCart(props.product.id)
   } else {
     cartStore.addToCart(props.product, 1)
+    // Trigger animation
+    isAnimating.value = true
+    setTimeout(() => {
+      isAnimating.value = false
+    }, 600)
   }
 }
 
@@ -53,7 +59,11 @@ function handleQuantityChange(newQuantity: number) {
       </Button>
     </template>
     <template v-else>
-      <Button @click="handleAddToCart" class="add-to-cart__button">
+      <Button 
+        @click="handleAddToCart" 
+        class="add-to-cart__button"
+        :class="{ 'add-to-cart__button--animating': isAnimating }"
+      >
         Aggiungi al carrello
       </Button>
     </template>
@@ -85,6 +95,28 @@ function handleQuantityChange(newQuantity: number) {
         width: auto;
       }
     }
+  }
+
+  &__button {
+    &--animating {
+      :deep(.btn) {
+        animation: addToCartPulse 0.6s ease;
+      }
+    }
+  }
+}
+
+@keyframes addToCartPulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 0 rgba(54, 53, 251, 0.7);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(54, 53, 251, 0);
   }
 }
 </style>

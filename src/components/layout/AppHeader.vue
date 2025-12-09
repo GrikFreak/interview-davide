@@ -89,9 +89,11 @@ onMounted(async () => {
           title="Carrello"
         >
           <ShoppingCart :size="20" />
-          <span v-if="cartStore.totalItems > 0" class="action-link__badge">
-            {{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}
-          </span>
+          <Transition name="badge">
+            <span v-if="cartStore.totalItems > 0" class="action-link__badge" :key="cartStore.totalItems">
+              {{ cartStore.totalItems > 99 ? '99+' : cartStore.totalItems }}
+            </span>
+          </Transition>
         </RouterLink>
         <RouterLink 
           to="/wishlist" 
@@ -100,9 +102,11 @@ onMounted(async () => {
           title="Wishlist"
         >
           <Heart :size="20" />
-          <span v-if="wishlistStore.totalItems > 0" class="action-link__badge">
-            {{ wishlistStore.totalItems > 99 ? '99+' : wishlistStore.totalItems }}
-          </span>
+          <Transition name="badge">
+            <span v-if="wishlistStore.totalItems > 0" class="action-link__badge" :key="wishlistStore.totalItems">
+              {{ wishlistStore.totalItems > 99 ? '99+' : wishlistStore.totalItems }}
+            </span>
+          </Transition>
         </RouterLink>
       </template>
       <button 
@@ -267,6 +271,28 @@ onMounted(async () => {
       top: -2px;
       right: -2px;
     }
+  }
+}
+
+.badge-enter-active {
+  animation: badgeBounce 0.5s ease;
+}
+
+.badge-leave-active {
+  animation: badgeBounce 0.3s ease reverse;
+}
+
+@keyframes badgeBounce {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.2);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
