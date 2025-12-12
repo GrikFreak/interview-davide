@@ -45,6 +45,8 @@ function handleCardClick(product: Product) {
 </template>
 
 <style scoped lang="scss">
+@use '@/assets/styles/breakpoints' as *;
+
 .product-card {
   position: relative;
   display: flex;
@@ -58,9 +60,18 @@ function handleCardClick(product: Product) {
   height: 100%;
   max-height: 600px;
 
+  @include mobile-only {
+    max-height: none;
+  }
+
   &:hover {
     transform: translateY(-4px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+
+    @include mobile-only {
+      transform: none;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
   }
 
   &__wishlist {
@@ -80,6 +91,16 @@ function handleCardClick(product: Product) {
     justify-content: center;
     flex-shrink: 0;
 
+    @include tablet-only {
+      height: 250px;
+      padding: 0.75rem;
+    }
+
+    @include mobile-only {
+      height: 200px;
+      padding: 0.75rem;
+    }
+
     img {
       width: 100%;
       height: 100%;
@@ -92,6 +113,10 @@ function handleCardClick(product: Product) {
     display: flex;
     flex-direction: column;
     flex-grow: 1;
+
+    @include mobile-only {
+      padding: 0.75rem;
+    }
   }
 
   &__category {
@@ -100,6 +125,10 @@ function handleCardClick(product: Product) {
     color: var(--primary-color);
     font-weight: 600;
     letter-spacing: 0.05em;
+
+    @include mobile-only {
+      font-size: 0.6875rem;
+    }
   }
 
   &__title {
@@ -111,6 +140,11 @@ function handleCardClick(product: Product) {
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+
+    @include mobile-only {
+      font-size: 0.875rem;
+      margin: 0.375rem 0;
+    }
   }
 
   &__price {
@@ -118,6 +152,11 @@ function handleCardClick(product: Product) {
     font-weight: 700;
     color: var(--text-color);
     margin: 0.5rem 0 1rem;
+
+    @include mobile-only {
+      font-size: 1.125rem;
+      margin: 0.375rem 0 0.75rem;
+    }
   }
 
   &__actions {

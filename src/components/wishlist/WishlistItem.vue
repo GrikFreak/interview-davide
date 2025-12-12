@@ -40,6 +40,8 @@ function handleProductClick() {
 </template>
 
 <style scoped lang="scss">
+@use '@/assets/styles/breakpoints' as *;
+
 .wishlist-item {
   position: relative;
   display: flex;
@@ -53,6 +55,10 @@ function handleProductClick() {
 
   &:hover {
     opacity: 0.85;
+
+    @include mobile-only {
+      opacity: 1;
+    }
   }
 }
 
@@ -77,8 +83,20 @@ function handleProductClick() {
   padding: 2rem;
   transition: transform 0.3s ease;
 
+  @include tablet-only {
+    padding: 1.5rem;
+  }
+
+  @include mobile-only {
+    padding: 1rem;
+  }
+
   .wishlist-item:hover & {
     transform: scale(1.02);
+
+    @include mobile-only {
+      transform: none;
+    }
   }
 
   img {
@@ -127,11 +145,7 @@ function handleProductClick() {
   letter-spacing: 0.02em;
 }
 
-@media (max-width: 768px) {
-  .wishlist-item__image {
-    padding: 1.5rem;
-  }
-
+@include mobile-only {
   .wishlist-item__content {
     padding: 1rem 0.75rem;
   }

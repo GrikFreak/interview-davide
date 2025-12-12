@@ -76,6 +76,14 @@ onMounted(async () => {
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  @include tablet-only {
+    padding: 1.5rem;
+  }
+
+  @include mobile-only {
+    padding: 1rem;
+  }
 }
 
 .product-detail__content {
@@ -84,9 +92,13 @@ onMounted(async () => {
   gap: 3rem;
   align-items: start;
 
-  @include mobile-only {
-    grid-template-columns: 1fr;
+  @include tablet-only {
     gap: 2rem;
+  }
+
+  @include mobile-and-tablet {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
@@ -98,6 +110,14 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   aspect-ratio: 1;
+
+  @include tablet-only {
+    padding: 1.5rem;
+  }
+
+  @include mobile-only {
+    padding: 1rem;
+  }
 
   img {
     max-width: 100%;
@@ -126,6 +146,10 @@ onMounted(async () => {
   color: var(--text-color);
   line-height: 1.2;
 
+  @include tablet-only {
+    font-size: 1.75rem;
+  }
+
   @include mobile-only {
     font-size: 1.5rem;
   }
@@ -136,6 +160,10 @@ onMounted(async () => {
   font-weight: 700;
   color: var(--text-color);
   margin: 0.5rem 0;
+
+  @include tablet-only {
+    font-size: 2.25rem;
+  }
 
   @include mobile-only {
     font-size: 2rem;
@@ -158,12 +186,25 @@ onMounted(async () => {
   border-top: 1px solid var(--border-color);
   flex-wrap: wrap;
   width: 100%;
+
+  @include mobile-only {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+  }
 }
 
 .wishlist-wrapper {
   display: flex;
   align-items: center;
   gap: 0.75rem;
+
+  @include mobile-only {
+    width: 100%;
+    justify-content: flex-start;
+  }
 }
 
 .wishlist-label {

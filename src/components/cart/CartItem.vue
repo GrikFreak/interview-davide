@@ -68,6 +68,8 @@ function handleProductClick() {
 </template>
 
 <style scoped lang="scss">
+@use '@/assets/styles/breakpoints' as *;
+
 .cart-item {
   display: flex;
   gap: 1.5rem;
@@ -76,6 +78,17 @@ function handleProductClick() {
   border: 1px solid var(--border-color);
   border-radius: 0.75rem;
   transition: box-shadow 0.2s ease;
+
+  @include tablet-only {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  @include mobile-only {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
 
   &:hover {
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -95,8 +108,22 @@ function handleProductClick() {
   cursor: pointer;
   transition: transform 0.2s ease;
 
+  @include tablet-only {
+    width: 100px;
+    height: 100px;
+  }
+
+  @include mobile-only {
+    width: 100%;
+    height: 200px;
+  }
+
   &:hover {
     transform: scale(1.05);
+
+    @include mobile-only {
+      transform: none;
+    }
   }
 
   img {
@@ -126,6 +153,10 @@ function handleProductClick() {
   cursor: pointer;
   transition: color 0.2s ease;
 
+  @include mobile-only {
+    font-size: 1rem;
+  }
+
   &:hover {
     color: var(--primary-color);
   }
@@ -151,6 +182,11 @@ function handleProductClick() {
   align-items: center;
   gap: 1rem;
   flex-wrap: wrap;
+
+  @include mobile-only {
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
 }
 
 .cart-item__total {
@@ -160,26 +196,16 @@ function handleProductClick() {
   color: var(--text-color);
   min-width: 80px;
   text-align: right;
-}
 
-@media (max-width: 768px) {
-  .cart-item {
-    flex-direction: column;
-    gap: 1rem;
+  @include tablet-only {
+    font-size: 1.125rem;
   }
 
-  .cart-item__image {
-    width: 100%;
-    height: 200px;
-  }
-
-  .cart-item__actions {
-    justify-content: space-between;
-  }
-
-  .cart-item__total {
+  @include mobile-only {
     flex: 1;
     text-align: left;
+    font-size: 1.125rem;
+    min-width: auto;
   }
 }
 </style>

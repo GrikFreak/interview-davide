@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch, onUnmounted } from 'vue'
 import { useDark, useToggle } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { getCategories } from '@/services/products'
 import { useAuthStore } from '@/stores/auth'
 import { useCartStore } from '@/stores/cart'
 import { useWishlistStore } from '@/stores/wishlist'
-import { ShoppingCart, Heart, User, Sun, Moon } from 'lucide-vue-next'
+import { ShoppingCart, Heart, User, Sun, Moon, Menu, X } from 'lucide-vue-next'
+import SearchBar from '@/components/ui/SearchBar.vue'
 
 const isDark = useDark()
 const toggleDark = useToggle(isDark)
@@ -18,6 +19,7 @@ const wishlistStore = useWishlistStore()
 
 const categories = ref<string[]>([])
 const isLoading = ref(true)
+const isMobileMenuOpen = ref(false)
 
 function capitalizeCategory(category: string): string {
   return category.charAt(0).toUpperCase() + category.slice(1)
@@ -42,6 +44,31 @@ function handleUserClick() {
   }
 }
 
+function toggleMobileMenu() {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value
+}
+
+function closeMobileMenu() {
+  isMobileMenuOpen.value = false
+}
+
+function handleNavClick() {
+  closeMobileMenu()
+}
+
+// Prevent body scroll when menu is open
+watch(isMobileMenuOpen, (isOpen) => {
+  if (isOpen) {
+    document.body.style.overflow = 'hidden'
+  } else {
+    document.body.style.overflow = ''
+  }
+})
+
+onUnmounted(() => {
+  document.body.style.overflow = ''
+})
+
 onMounted(async () => {
   try {
     categories.value = await getCategories()
@@ -55,15 +82,26 @@ onMounted(async () => {
 
 <template>
   <header class="app-header">
-    <RouterLink :to="{ name: 'products' }" class="logo">
+    <button class="mobile-menu-toggle" @click="toggleMobileMenu" aria-label="Toggle menu">
+      <Menu :size="24" />
+    </button>
+
+    <RouterLink :to="{ name: 'products' }" class="logo" @click="closeMobileMenu">
       <h1>Ecommerce App</h1>
     </RouterLink>
 
-    <nav class="main-nav">
+    <nav class="main-nav" :class="{ 'main-nav--open': isMobileMenuOpen }">
+      <div v-if="isMobileMenuOpen" class="main-nav__header">
+        <h2 class="main-nav__title">Menu</h2>
+        <button class="main-nav__close" @click="closeMobileMenu" aria-label="Close menu">
+          <X :size="24" />
+        </button>
+      </div>
       <RouterLink 
         :to="{ name: 'products' }"
         class="nav-link"
         :class="{ 'nav-link-active': isNavLinkActive() }"
+        @click="handleNavClick"
       >
         Tutti i Prodotti
       </RouterLink>
@@ -74,11 +112,29 @@ onMounted(async () => {
           :to="{ name: 'products', query: { category } }"
           class="nav-link"
           :class="{ 'nav-link-active': isNavLinkActive(category) }"
+          @click="handleNavClick"
         >
           {{ capitalizeCategory(category) }}
         </RouterLink>
       </template>
+      
+      <div v-if="isMobileMenuOpen" class="main-nav__search">
+        <SearchBar :auto-focus="true" />
+      </div>
     </nav>
+
+    <div class="desktop-search">
+      <SearchBar />
+    </div>
+    
+    <Transition name="overlay">
+      <div 
+        v-if="isMobileMenuOpen" 
+        class="mobile-menu-overlay" 
+        @click="closeMobileMenu"
+      ></div>
+    </Transition>
+
 
     <div class="header-actions">
       <template v-if="authStore.isAuthenticated">
@@ -130,12 +186,17 @@ onMounted(async () => {
 
 .app-header {
   display: flex;
+  gap: 1rem;
   justify-content: space-between;
   align-items: center;
   padding: 1rem 2rem;
   background: var(--header-bg);
   border-bottom: 1px solid var(--border-color);
   transition: background-color 0.3s ease, border-color 0.3s ease;
+
+  @include tablet-only {
+    padding: 1rem 1.5rem;
+  }
 
   @include mobile-only {
     padding: 0.75rem 1rem;
@@ -166,12 +227,89 @@ onMounted(async () => {
 .main-nav {
   display: flex;
   gap: 1.5rem;
+  align-items: center;
 
-  @include mobile-only {
-    order: 3;
-    width: 100%;
+  @include tablet-only {
+    gap: 1.25rem;
+  }
+
+  @include mobile-and-tablet {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 280px;
+    max-width: 85vw;
+    height: 100vh;
+    background: var(--header-bg);
+    z-index: 1001;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0;
+    gap: 0;
+    transform: translateX(-100%);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+
+    &--open {
+      transform: translateX(0);
+    }
+  }
+
+  &__header {
+    display: none;
+
+    @include mobile-and-tablet {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid var(--border-color);
+      position: sticky;
+      top: 0;
+      background: var(--header-bg);
+      z-index: 10;
+    }
+  }
+
+  &__title {
+    margin: 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+  }
+
+  &__close {
+    background: transparent;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
     justify-content: center;
-    gap: 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background-color: var(--hover-bg);
+      color: var(--primary-color);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__search {
+    display: none;
+
+    @include mobile-and-tablet {
+      display: block;
+      padding: 1rem 1.5rem;
+      border-top: 1px solid var(--border-color);
+      margin-top: 0.5rem;
+    }
   }
 }
 
@@ -209,8 +347,43 @@ onMounted(async () => {
     }
   }
 
-  @include mobile-only {
-    font-size: 0.875rem;
+  @include tablet-only {
+    font-size: 0.9375rem;
+  }
+
+  @include mobile-and-tablet {
+    font-size: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    text-align: left;
+    width: 100%;
+    display: block;
+    margin: 0;
+    border-radius: 0;
+
+    &:first-of-type {
+      border-top: none;
+    }
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &::after {
+      display: none;
+    }
+
+    &:hover,
+    &:active {
+      background-color: var(--hover-bg);
+      color: var(--primary-color);
+    }
+
+    &.nav-link-active {
+      background-color: var(--primary-color);
+      color: var(--active-text);
+      font-weight: 600;
+    }
   }
 }
 
@@ -218,6 +391,10 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+
+  @include mobile-only {
+    gap: 0.375rem;
+  }
 }
 
 .action-link {
@@ -230,6 +407,10 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   color: var(--text-color);
+
+  @include tablet-only {
+    padding: 0.5625rem;
+  }
 
   @include mobile-only {
     padding: 0.5rem;
@@ -309,6 +490,11 @@ onMounted(async () => {
   color: var(--text-color);
   transition: all 0.2s ease;
 
+  @include tablet-only {
+    width: 40px;
+    height: 40px;
+  }
+
   @include mobile-only {
     width: 36px;
     height: 36px;
@@ -350,6 +536,11 @@ onMounted(async () => {
   color: var(--text-color);
   transition: all 0.2s ease;
 
+  @include tablet-only {
+    width: 40px;
+    height: 40px;
+  }
+
   @include mobile-only {
     width: 36px;
     height: 36px;
@@ -363,6 +554,102 @@ onMounted(async () => {
 
   &:active {
     transform: scale(0.95);
+  }
+}
+
+.mobile-menu-toggle {
+  display: none;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-color);
+  transition: all 0.2s ease;
+  padding: 0;
+  flex-shrink: 0;
+
+  @include mobile-and-tablet {
+    display: flex;
+    width: 40px;
+    height: 40px;
+    order: 0;
+    z-index: 1002;
+    position: relative;
+  }
+
+  &:hover {
+    background-color: var(--hover-bg);
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.mobile-menu-overlay {
+  display: none;
+
+  @include mobile-and-tablet {
+    display: block;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    backdrop-filter: blur(2px);
+  }
+}
+
+.overlay-enter-active,
+.overlay-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.overlay-enter-from,
+.overlay-leave-to {
+  opacity: 0;
+}
+
+.desktop-search {
+  display: flex;
+  justify-content: flex-end;
+  flex: 1;
+  max-width: 500px;
+  margin: 0 1.5rem;
+
+  @include tablet-only {
+    max-width: 300px;
+    margin: 0 1rem;
+  }
+
+  @include mobile-and-tablet {
+    display: none;
+  }
+}
+
+@include mobile-and-tablet {
+  .app-header {
+    position: relative;
+    z-index: 100;
+  }
+
+  .logo {
+    flex: 1;
+    order: 1;
+    margin-left: 0.75rem;
+  }
+
+  .header-actions {
+    order: 2;
+    margin-left: auto;
   }
 }
 </style>

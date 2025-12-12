@@ -25,11 +25,21 @@ defineProps<{
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 
+  @include desktop {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
   @include tablet-only {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
   }
 
   @include mobile-only {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  @media (max-width: 360px) {
     grid-template-columns: 1fr;
   }
 }

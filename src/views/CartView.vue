@@ -64,6 +64,14 @@ const cartStore = useCartStore()
   padding: 2rem;
   max-width: 1200px;
   margin: 0 auto;
+
+  @include tablet-only {
+    padding: 1.5rem;
+  }
+
+  @include mobile-only {
+    padding: 1rem;
+  }
 }
 
 .cart-view__header {
@@ -74,10 +82,22 @@ const cartStore = useCartStore()
   flex-wrap: wrap;
   gap: 1rem;
 
+  @include mobile-only {
+    margin-bottom: 1.5rem;
+  }
+
   h1 {
     font-size: 2rem;
     margin: 0;
     color: var(--text-color);
+
+    @include tablet-only {
+      font-size: 1.75rem;
+    }
+
+    @include mobile-only {
+      font-size: 1.5rem;
+    }
   }
 }
 
@@ -92,8 +112,9 @@ const cartStore = useCartStore()
   grid-template-columns: 1fr 400px;
   gap: 2rem;
 
-  @include tablet-only {
+  @include mobile-and-tablet {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 }
 
@@ -111,6 +132,11 @@ const cartStore = useCartStore()
   position: sticky;
   top: 2rem;
   height: fit-content;
+
+  @include mobile-and-tablet {
+    position: static;
+    padding: 1.25rem;
+  }
 }
 
 .cart-summary__title {
@@ -154,14 +180,5 @@ const cartStore = useCartStore()
   color: var(--text-secondary);
 }
 
-@include mobile-only {
-  .cart-view {
-    padding: 1rem;
-  }
-
-  .cart-summary {
-    position: static;
-  }
-}
 </style>
 

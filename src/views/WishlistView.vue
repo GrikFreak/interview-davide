@@ -36,10 +36,20 @@ const wishlistStore = useWishlistStore()
 </template>
 
 <style scoped lang="scss">
+@use '@/assets/styles/breakpoints' as *;
+
 .wishlist-view {
   padding: 3rem 2rem;
   max-width: 1400px;
   margin: 0 auto;
+
+  @include tablet-only {
+    padding: 2rem 1.5rem;
+  }
+
+  @include mobile-only {
+    padding: 1.5rem 1rem;
+  }
 }
 
 .wishlist-view__header {
@@ -52,6 +62,11 @@ const wishlistStore = useWishlistStore()
   padding-bottom: 1.5rem;
   border-bottom: 1px solid var(--border-color);
 
+  @include mobile-only {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+  }
+
   h1 {
     font-size: 1.75rem;
     font-weight: 400;
@@ -59,6 +74,14 @@ const wishlistStore = useWishlistStore()
     color: var(--text-color);
     letter-spacing: 0.02em;
     text-transform: uppercase;
+
+    @include tablet-only {
+      font-size: 1.5rem;
+    }
+
+    @include mobile-only {
+      font-size: 1.25rem;
+    }
   }
 }
 
@@ -82,16 +105,21 @@ const wishlistStore = useWishlistStore()
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
 
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(3, 1fr);
+  @include desktop {
+    grid-template-columns: repeat(4, 1fr);
   }
 
-  @media (max-width: 768px) {
+  @include tablet-only {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.25rem;
+  }
+
+  @include mobile-only {
     grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
   }
 
-  @media (max-width: 480px) {
+  @media (max-width: 360px) {
     grid-template-columns: 1fr;
   }
 }

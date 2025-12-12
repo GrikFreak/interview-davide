@@ -108,6 +108,8 @@ function handleClose() {
 </template>
 
 <style scoped lang="scss">
+@use '@/assets/styles/breakpoints' as *;
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -118,8 +120,14 @@ function handleClose() {
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 2000;
   padding: 1rem;
+
+  @include mobile-only {
+    padding: 1rem;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
 .modal-content {
@@ -129,6 +137,15 @@ function handleClose() {
   max-width: 400px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
   overflow: hidden;
+  max-height: 90vh;
+  overflow-y: auto;
+
+  @include mobile-only {
+    max-width: calc(100% - 2rem);
+    border-radius: 12px;
+    max-height: 90vh;
+    margin: auto;
+  }
 }
 
 .modal-header {
@@ -138,10 +155,18 @@ function handleClose() {
   padding: 1.5rem;
   border-bottom: 1px solid var(--border-color);
 
+  @include mobile-only {
+    padding: 1.25rem;
+  }
+
   h2 {
     margin: 0;
     font-size: 1.5rem;
     color: var(--text-color);
+
+    @include mobile-only {
+      font-size: 1.25rem;
+    }
   }
 }
 
@@ -176,6 +201,11 @@ function handleClose() {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+
+  @include mobile-only {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
 }
 
 .error-message {
@@ -210,6 +240,16 @@ function handleClose() {
   gap: 0.75rem;
   justify-content: flex-end;
   margin-top: 0.5rem;
+  flex-wrap: wrap;
+
+  @include mobile-only {
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+
+    :deep(.btn) {
+      width: 100%;
+    }
+  }
 }
 
 // Modal transitions
