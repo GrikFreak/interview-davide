@@ -81,8 +81,14 @@ onMounted(async () => {
 </script>
 
 <template>
+  <div class="header-wrapper">
   <header class="app-header">
-    <button class="mobile-menu-toggle" @click="toggleMobileMenu" aria-label="Toggle menu">
+    <button 
+      class="mobile-menu-toggle" 
+      :class="{ 'mobile-menu-toggle--hidden': isMobileMenuOpen }"
+      @click="toggleMobileMenu" 
+      aria-label="Toggle menu"
+    >
       <Menu :size="24" />
     </button>
 
@@ -97,6 +103,7 @@ onMounted(async () => {
           <X :size="24" />
         </button>
       </div>
+      
       <RouterLink 
         :to="{ name: 'products' }"
         class="nav-link"
@@ -117,10 +124,6 @@ onMounted(async () => {
           {{ capitalizeCategory(category) }}
         </RouterLink>
       </template>
-      
-      <div v-if="isMobileMenuOpen" class="main-nav__search">
-        <SearchBar :auto-focus="true" />
-      </div>
     </nav>
 
     <div class="desktop-search">
@@ -179,10 +182,21 @@ onMounted(async () => {
       </button>
     </div>
   </header>
+  
+  <div class="mobile-search-bar">
+    <SearchBar />
+  </div>
+  </div>
 </template>
 
 <style scoped lang="scss">
 @use '@/assets/styles/breakpoints' as *;
+
+.header-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
 
 .app-header {
   display: flex;
@@ -301,16 +315,6 @@ onMounted(async () => {
     }
   }
 
-  &__search {
-    display: none;
-
-    @include mobile-and-tablet {
-      display: block;
-      padding: 1rem 1.5rem;
-      border-top: 1px solid var(--border-color);
-      margin-top: 0.5rem;
-    }
-  }
 }
 
 .nav-link {
@@ -592,6 +596,12 @@ onMounted(async () => {
   }
 }
 
+.mobile-menu-toggle--hidden {
+  @include mobile-and-tablet {
+    display: none !important;
+  }
+}
+
 .mobile-menu-overlay {
   display: none;
 
@@ -635,12 +645,25 @@ onMounted(async () => {
   }
 }
 
-@include mobile-and-tablet {
-  .app-header {
-    position: relative;
-    z-index: 100;
-  }
+.mobile-search-bar {
+  display: none;
 
+  @include mobile-and-tablet {
+    display: block;
+    width: 100%;
+    padding: 1rem;
+    background: var(--header-bg);
+    border-bottom: 1px solid var(--border-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+    :deep(.search-bar) {
+      width: 100%;
+      padding: 0.5rem 1rem;
+    }
+  }
+}
+
+@include mobile-and-tablet {
   .logo {
     flex: 1;
     order: 1;

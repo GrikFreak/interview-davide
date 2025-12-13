@@ -1,5 +1,7 @@
 <script setup lang="ts">
+import { computed } from 'vue'
 import type { SortOrder } from '@/services/products'
+import Select from './Select.vue'
 
 interface Props {
   currentSort?: SortOrder
@@ -11,26 +13,28 @@ const emit = defineEmits<{
   'update:sort': [value: SortOrder | undefined]
 }>()
 
-function handleChange(event: Event) {
-  const target = event.target as HTMLSelectElement
-  const value = target.value as SortOrder | ''
-  emit('update:sort', value === '' ? undefined : value)
-}
+const options = [
+  { value: '', label: 'Nessun ordinamento' },
+  { value: 'asc', label: 'Prezzo: crescente' },
+  { value: 'desc', label: 'Prezzo: decrescente' },
+]
+
+const modelValue = computed({
+  get: () => props.currentSort || '',
+  set: (value) => {
+    emit('update:sort', value === '' ? undefined : (value as SortOrder))
+  },
+})
 </script>
 
 <template>
   <div class="sort-control">
-    <label for="sort-select" class="sort-control__label">Ordina per:</label>
-    <select
-      id="sort-select"
-      :value="currentSort || ''"
-      @change="handleChange"
-      class="sort-control__select"
-    >
-      <option value="">Nessun ordinamento</option>
-      <option value="asc">Prezzo: crescente</option>
-      <option value="desc">Prezzo: decrescente</option>
-    </select>
+    <label class="sort-control__label">Ordina per:</label>
+    <Select
+      v-model="modelValue"
+      :options="options"
+      placeholder="Nessun ordinamento"
+    />
   </div>
 </template>
 
@@ -60,32 +64,6 @@ function handleChange(event: Event) {
     }
   }
 
-  &__select {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid var(--border-color);
-    border-radius: 0.5rem;
-    background: var(--card-bg);
-    color: var(--text-color);
-    font-size: 0.9375rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    min-width: 180px;
-
-    @include mobile-only {
-      width: 100%;
-      min-width: auto;
-    }
-
-    &:hover {
-      border-color: var(--primary-color);
-    }
-
-    &:focus {
-      outline: none;
-      border-color: var(--primary-color);
-      box-shadow: 0 0 0 3px rgba(54, 53, 251, 0.1);
-    }
-  }
 }
 </style>
 
