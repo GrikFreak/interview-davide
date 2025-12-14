@@ -19,6 +19,8 @@ const model = defineModel<string>()
       :type="type ?? 'text'"
       :placeholder="placeholder"
       :disabled="disabled"
+      :aria-label="label || placeholder"
+      :aria-invalid="!!error"
     />
     <span v-if="error" class="input-wrapper__error">{{ error }}</span>
   </div>

@@ -18,7 +18,15 @@ function handleCardClick(product: Product) {
 </script>
 
 <template>
-  <article class="product-card" @click="handleCardClick(product)">
+  <article 
+    class="product-card" 
+    @click="handleCardClick(product)" 
+    role="button" 
+    tabindex="0" 
+    @keydown.enter="handleCardClick(product)" 
+    @keydown.space.prevent="handleCardClick(product)"
+    :aria-label="`Vedi dettagli di ${product.title}`"
+  >
     <div 
       v-if="authStore.isAuthenticated" 
       class="product-card__wishlist"
@@ -72,6 +80,11 @@ function handleCardClick(product: Product) {
       transform: none;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
     }
+  }
+
+  &:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
   }
 
   &__wishlist {

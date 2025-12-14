@@ -62,7 +62,7 @@ const cartStore = useCartStore()
 
 .cart-view {
   padding: 2rem;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
 
   @include tablet-only {
@@ -81,13 +81,17 @@ const cartStore = useCartStore()
   align-items: baseline;
   flex-wrap: wrap;
   gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
 
   @include mobile-only {
     margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
   }
 
   h1 {
     font-size: 2rem;
+    font-weight: 600;
     margin: 0;
     color: var(--text-color);
 

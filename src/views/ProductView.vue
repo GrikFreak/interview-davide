@@ -172,16 +172,20 @@ watch([currentCategory, currentSearch, currentSort], fetchProducts, { immediate:
     align-items: flex-start;
     gap: 1.5rem;
     flex-wrap: wrap;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
 
     @include mobile-only {
       margin-bottom: 1.5rem;
       flex-direction: column;
+      padding-bottom: 1rem;
     }
 
     h1 {
       font-size: 2rem;
+      font-weight: 600;
       margin: 0 0 0.5rem;
-      color: var(--text-color, #1a1a1a);
+      color: var(--text-color);
 
       @include tablet-only {
         font-size: 1.75rem;
@@ -193,7 +197,7 @@ watch([currentCategory, currentSearch, currentSort], fetchProducts, { immediate:
     }
 
     p {
-      color: var(--text-secondary, #666);
+      color: var(--text-secondary);
       margin: 0;
       font-size: 1rem;
 

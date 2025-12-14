@@ -37,7 +37,7 @@ function handleUserClick() {
   if (authStore.isAuthenticated) {
     authStore.logout()
     if (route.name === 'cart' || route.name === 'wishlist') {
-      router.push('/')
+      router.push({ name: 'products' })
     }
   } else {
     authStore.openLoginModal()

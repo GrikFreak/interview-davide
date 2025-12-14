@@ -53,7 +53,7 @@ const wishlistStore = useWishlistStore()
 }
 
 .wishlist-view__header {
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   display: flex;
   justify-content: space-between;
   align-items: baseline;
@@ -63,24 +63,22 @@ const wishlistStore = useWishlistStore()
   border-bottom: 1px solid var(--border-color);
 
   @include mobile-only {
-    margin-bottom: 2rem;
+    margin-bottom: 1.5rem;
     padding-bottom: 1rem;
   }
 
   h1 {
-    font-size: 1.75rem;
-    font-weight: 400;
+    font-size: 2rem;
+    font-weight: 600;
     margin: 0;
     color: var(--text-color);
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
 
     @include tablet-only {
-      font-size: 1.5rem;
+      font-size: 1.75rem;
     }
 
     @include mobile-only {
-      font-size: 1.25rem;
+      font-size: 1.5rem;
     }
   }
 }
@@ -88,10 +86,7 @@ const wishlistStore = useWishlistStore()
 .wishlist-view__count {
   margin: 0;
   color: var(--text-secondary);
-  font-size: 0.875rem;
-  font-weight: 400;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  font-size: 1rem;
 }
 
 .wishlist-view__content {
